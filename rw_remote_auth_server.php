@@ -75,11 +75,19 @@ class RW_Remote_Auth_Server {
 	static public $plugin_version = '';
 
 	/**
+	 * @var     string
+	 * @since   0.1
+	 * @access  public
+	 */
+	static public $api_endpoint_default = '/rw_auth';
+
+	/**
 	 * Plugin constructor.
 	 *
 	 * @since   0.1
 	 * @access  public
 	 * @uses    plugin_basename
+	 * @action  rw_remote_auth_server_init
 	 */
 	public function __construct () {
 		// set the textdomain variable
@@ -99,9 +107,19 @@ class RW_Remote_Auth_Server {
 
 		// Add Filter & Actions
 
-		//add_action( '', array( '', '' ) );
-		//add_filter( '', array( '', '' ), 10, 2 );
+		add_action( 'admin_init',       array( 'RW_Remote_Auth_Server_Options', 'register_settings' ) );
+		add_action( 'admin_menu',       array( 'RW_Remote_Auth_Server_Options', 'options_menu' ) );
+		add_action( 'init',             array( 'RW_Remote_Auth_Server_API', 'add_endpoint'), 0 );
+		add_action( 'parse_request',    array( 'RW_Remote_Auth_Server_API', 'parse_request'), 0 );
 
+		add_filter( 'plugin_action_links_' . self::$plugin_base_name, array( 'RW_Remote_Auth_Server_Options', 'plugin_settings_link') );
+		add_filter( 'query_vars',       array( 'RW_Remote_Auth_Server_API', 'add_query_vars'), 0 );
+
+        add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_exists' ) );
+        add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_auth' ) );
+        add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_create' ) );
+
+		do_action( 'rw_remote_auth_server_init' );
 	}
 
 	/**
@@ -129,7 +147,7 @@ class RW_Remote_Auth_Server {
 	 * @return	void
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( self::get_textdomain(), FALSE,false, apply_filters ( 'rw_remote_auth_server_translationpath', dirname( plugin_basename( __FILE__ )) .  self::get_textdomain_path() ) );
+		load_plugin_textdomain( self::get_textdomain(), false, apply_filters ( 'rw_remote_auth_server_translationpath', dirname( plugin_basename( __FILE__ )) .  self::get_textdomain_path() ) );
 	}
 
 	/**
@@ -212,4 +230,5 @@ if ( class_exists( 'RW_Remote_Auth_Server' ) ) {
 
 	register_activation_hook( __FILE__, array( 'RW_Remote_Auth_Server_Installation', 'on_activate' ) );
 	register_uninstall_hook(  __FILE__,	array( 'RW_Remote_Auth_Server_Installation', 'on_uninstall' ) );
+    register_deactivation_hook( __FILE__, array( 'RW_Remote_Auth_Server_Installation', 'on_deactivation' ) );
 }

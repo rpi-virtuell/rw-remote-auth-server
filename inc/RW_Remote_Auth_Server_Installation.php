@@ -43,8 +43,25 @@ class RW_Remote_Auth_Server_Installation {
 			);
 		}
 
+        // Flush Rewrite Rules after activation
+        flush_rewrite_rules();
 
 	}
+
+    /**
+     * Clean up after deactivation
+     *
+     * Clean up after deactivation the plugin
+     * Refresh rewriterules
+     *
+     * @since   0.1
+     * @access  public
+     * @static
+     * @return  void
+     */
+    public static function on_deactivation() {
+        flush_rewrite_rules();
+    }
 
 	/**
 	 * Clean up after uninstall
