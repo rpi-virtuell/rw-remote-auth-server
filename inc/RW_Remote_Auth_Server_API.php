@@ -23,6 +23,7 @@ class RW_Remote_Auth_Server_API {
         add_rewrite_rule( '^'. $endpoint .'/([^/]*)/?', 'index.php/?__rwrasapi=1&data=$1', 'top');
         flush_rewrite_rules();
 	}
+
     /**
      *
      * @since   0.1
@@ -65,9 +66,7 @@ class RW_Remote_Auth_Server_API {
 	 */
 	static protected function handle_request(){
 		global $wp;
-        //var_dump( stripslashes( $wp->query_vars[ 'data' ] ) );
 		$request = json_decode( stripslashes( $wp->query_vars[ 'data' ] ) );
-        //var_dump( $request);
 		if( ! $request || !$request->cmd || !$request->data ) {
             RW_Remote_Auth_Server_API::send_response('Please send commands in json.');
         } else {
@@ -128,10 +127,19 @@ class RW_Remote_Auth_Server_API {
      * @return  mixed
      */
     static public function cmd_user_create( $request ) {
+	    global $wpdb;
+
         if ( 'user_create' == $request->cmd ) {
             // Check userdate and create the new user
-            $answer = register_new_user( $request->data->user_name, $request->data->user_email );
-            RW_Remote_Auth_Server_API::send_response( $answer );
+			$data = array(
+				'user_login' => $request->data->user_name,
+				'user_pass' => urldecode( $request->data->user_password ),
+				'user_nicename' => $request->data->user_name,
+
+			);
+
+			$wpdb->insert( $wpdb->users, $data   );
+            RW_Remote_Auth_Server_API::send_response( true );
         }
        return $request;
     }
