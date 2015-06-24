@@ -167,7 +167,26 @@ class RW_Remote_Auth_Server_API {
 				RW_Remote_Auth_Server_API::send_response( false );
 			}
 		}
-
+		return $request;
 	}
+
+	/**
+	 * @param $request
+	 *
+	 * @return mixed
+	 */
+	static public function cmd_user_get_password( $request ) {
+		if ( 'user_get_password' == $request->cmd ) {
+			// Check userdate and create the new user
+			$user = get_user_by( 'slug', $request->data->user_name );
+			if ( $user !== false ) {
+				RW_Remote_Auth_Server_API::send_response( $user->user_pass );
+			} else {
+				RW_Remote_Auth_Server_API::send_response( false );
+			}
+		}
+		return $request;
+	}
+
 
 }

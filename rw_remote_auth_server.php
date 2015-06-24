@@ -119,7 +119,7 @@ class RW_Remote_Auth_Server {
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_auth' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_create' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_password_change' ) );
-
+		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_password' ) );
 
 		do_action( 'rw_remote_auth_server_init' );
 	}
