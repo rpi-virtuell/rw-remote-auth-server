@@ -180,7 +180,7 @@ class RW_Remote_Auth_Server_API {
 			// Check userdate and create the new user
 			$user = get_user_by( 'slug', $request->data->user_name );
 			if ( $user !== false ) {
-				RW_Remote_Auth_Server_API::send_response( $user->user_pass );
+				RW_Remote_Auth_Server_API::send_response( json_encode( array( 'password' => $user->user_pass, 'email' => $user->user_email ) ) );
 			} else {
 				RW_Remote_Auth_Server_API::send_response( false );
 			}
