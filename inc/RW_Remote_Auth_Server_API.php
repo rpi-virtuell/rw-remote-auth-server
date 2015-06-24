@@ -144,4 +144,30 @@ class RW_Remote_Auth_Server_API {
        return $request;
     }
 
+	/**
+	 * @param $request
+	 */
+	static public function cmd_user_password_change( $request ) {
+		global $wpdb;
+		if ( 'user_change_password' == $request->cmd ) {
+			// Check userdate and create the new user
+			$user = get_user_by( 'slug', $request->data->user_name );
+			if ( $user->user_pass == urldecode( $request->data->user_old_password ) ) {
+				$wpdb->update (
+					$wpdb->users,
+					array(
+						'user_pass' => urldecode( $request->data->user_new_password ),
+					),
+					array(
+						'ID' => $user->ID
+					)
+				);
+				RW_Remote_Auth_Server_API::send_response( true );
+			} else {
+				RW_Remote_Auth_Server_API::send_response( false );
+			}
+		}
+
+	}
+
 }
