@@ -135,6 +135,7 @@ class RW_Remote_Auth_Server_API {
 				'user_login' => $request->data->user_name,
 				'user_pass' => urldecode( $request->data->user_password ),
 				'user_nicename' => $request->data->user_name,
+				'user_email' => $request->data->user_email,
 
 			);
 
