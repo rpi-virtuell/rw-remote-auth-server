@@ -5,12 +5,14 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:
 * Author:           Frank Staude
-* Version:          0.1
+* Version:          0.1.1
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
 * Domain Path:      /languages
-* Last Change:      02.06.2015 13:20
+ * GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
+ * GitHub Branch:     master
+ * Last Change:       30.06.2015 14:14
 */
 
 class RW_Remote_Auth_Server {
@@ -21,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version = "0.1";
+	static public $version = "0.1.1";
 
 	/**
 	 * Singleton object holder

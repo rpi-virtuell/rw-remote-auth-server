@@ -50,6 +50,9 @@ Answer
 
 == Changelog ==
 
+= 0.1.1 =
+* Added support for WordPress Plugin GitHub updater ( #1 )
+
 = 0.1 =
 * First version published
 
