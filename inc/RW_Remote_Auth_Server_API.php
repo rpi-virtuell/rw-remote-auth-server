@@ -130,17 +130,20 @@ class RW_Remote_Auth_Server_API {
 	    global $wpdb;
 
         if ( 'user_create' == $request->cmd ) {
-            // Check userdate and create the new user
-			$data = array(
-				'user_login' => $request->data->user_name,
-				'user_pass' => urldecode( $request->data->user_password ),
-				'user_nicename' => $request->data->user_name,
-				'user_email' => $request->data->user_email,
+	        // only if user not exists.
+	        if ( ! get_user_by( 'login' ,$request->data->user_name ) ) {
+		        // Check userdate and create the new user
+		        $data = array(
+			        'user_login'    => $request->data->user_name,
+			        'user_pass'     => urldecode( $request->data->user_password ),
+			        'user_nicename' => $request->data->user_name,
+			        'user_email'    => $request->data->user_email,
 
-			);
+		        );
 
-			$wpdb->insert( $wpdb->users, $data   );
-            RW_Remote_Auth_Server_API::send_response( true );
+		        $wpdb->insert( $wpdb->users, $data );
+		        RW_Remote_Auth_Server_API::send_response( true );
+	        }
         }
        return $request;
     }
