@@ -52,6 +52,7 @@ Answer
 
 = 0.1.3 =
 * Added ping command ( #3 )
+* Added selftest ( #2 )
 
 = 0.1.2 =
 * added check if user exists

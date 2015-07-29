@@ -5,14 +5,14 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:
 * Author:           Frank Staude
-* Version:          0.1.2
+* Version:          0.1.3
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
 * Domain Path:      /languages
  * GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
  * GitHub Branch:     master
- * Last Change:       21.07.2015 18:10
+ * Last Change:       29.07.2015 15:19
 */
 
 class RW_Remote_Auth_Server {
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version = "0.1.1";
+	static public $version = "0.1.3";
 
 	/**
 	 * Singleton object holder
@@ -113,6 +113,7 @@ class RW_Remote_Auth_Server {
 		add_action( 'admin_menu',       array( 'RW_Remote_Auth_Server_Options', 'options_menu' ) );
 		add_action( 'init',             array( 'RW_Remote_Auth_Server_API', 'add_endpoint'), 0 );
 		add_action( 'parse_request',    array( 'RW_Remote_Auth_Server_API', 'parse_request'), 0 );
+		add_action( 'rw_auth_check_server', array( 'RW_Remote_Auth_Server_Installation', 'check_server') );
 
 		add_filter( 'plugin_action_links_' . self::$plugin_base_name, array( 'RW_Remote_Auth_Server_Options', 'plugin_settings_link') );
 		add_filter( 'query_vars',       array( 'RW_Remote_Auth_Server_API', 'add_query_vars'), 0 );
