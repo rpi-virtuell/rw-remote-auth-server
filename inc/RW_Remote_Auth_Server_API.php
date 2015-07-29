@@ -192,5 +192,20 @@ class RW_Remote_Auth_Server_API {
 		return $request;
 	}
 
+	/**
+	 * Implements a ping command, to check if rw_auth server is responding
+	 *
+	 * @since 0.1.3
+	 * @param $request
+	 *
+	 * @return mixed
+	 */
+	static public function cmd_ping( $request ) {
+		if ( 'ping' == $request->cmd ) {
+			RW_Remote_Auth_Server_API::send_response( json_encode( array( 'answer' => 'pong' ) ) );
+		}
+		return $request;
+	}
 
+	
 }
