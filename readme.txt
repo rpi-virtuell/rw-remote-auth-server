@@ -3,7 +3,7 @@ Contributors: f.staude
 Tags:
 Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,15 @@ Answer
 
 
 == Changelog ==
+
+= 0.1.4 =
+* login screen, change register link to cas client
+* login screen, change back link to cas client
+* login screen, change lostpassword link to cas client
+* lost password screen, change login link, added cas info
+* reset password mail, change url, added cas info
+* reset password mail, change server name, added cas client
+* password change screen, added redirect_to url for cas client
 
 = 0.1.3 =
 * Added ping command ( #3 )
