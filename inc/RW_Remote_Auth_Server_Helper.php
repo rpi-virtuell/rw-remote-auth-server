@@ -171,4 +171,11 @@ class RW_Remote_Auth_Server_Helper {
 		}
 	}
 
+	static public function login_message( $message ) {
+		if ( isset( $_REQUEST[ 'reauth' ] )  &&  $_REQUEST[ 'reauth' ] == 1 ) {
+			$message .= '<p class="message">' .  __( 'You will receive a link to create a new password via email.', RW_Remote_Auth_Server::$textdomain ) . "</p>";
+		}
+		return $message;
+	}
+
 }

@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: RW Remote Auth Server\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Tue Jun 02 2015 11:05:57 GMT+0200 (CEST)\n"
-"PO-Revision-Date: Tue Jun 02 2015 11:13:04 GMT+0200 (CEST)\n"
-"Last-Translator: admin <frank@staude.net>\n"
+"PO-Revision-Date: Tue Aug 04 2015 16:43:34 GMT+0200\n"
+"Last-Translator: Frank Staude <frank@staude.net>\n"
 "Language-Team: \n"
 "Language: German\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
@@ -22,11 +22,17 @@ msgstr ""
 "X-Loco-Target-Locale: de_DE\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: ../inc/RW_Remote_Auth_Server_Autoloader.php:27
+#: ../inc/RW_Remote_Auth_Server_Helper.php:176
+msgid "You will receive a link to create a new password via email."
+msgstr ""
+"Du bekommst eine E-Mail zugesandt, mit deren Hilfe du ein neues Passwort "
+"erstellen kannst."
+
+#: ../inc/RW_Remote_Auth_Server_Installation.php:27
 msgid "This plugin requires WordPress 3.0 or newer to work"
 msgstr "Dieses Plugin benötigt WordPress 4.0 oder neuer."
 
-#: ../inc/RW_Remote_Auth_Server_Autoloader.php:40
+#: ../inc/RW_Remote_Auth_Server_Installation.php:40
 #, php-format
 msgid ""
 "This plugin requires PHP 5.2 or newer to work. Your current PHP version is "
@@ -34,3 +40,60 @@ msgid ""
 msgstr ""
 "Dieses Plugin benötigt PHP 5.2 oder neuer. Ihrer aktuelle PHP Version ist \n"
 "%1s. Bitte aktualisieren selbst ihr PHP oder fragen Sie ihren Hoster."
+
+#: ../inc/RW_Remote_Auth_Server_Installation.php:111
+msgid "rw_auth not responding"
+msgstr "rw_auth reagiert nicht."
+
+#: ../inc/RW_Remote_Auth_Server_Installation.php:112
+#, php-format
+msgid "The rw_auth on %1s ist not responding."
+msgstr "Der RW_Auth Server %1 reagiert nicht."
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:39
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:71
+msgid "Remote Auth Server"
+msgstr "Remote Auth Server"
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:86
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:97
+msgid "Remote Auth Server Options"
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:98
+msgid "Settings for Remote Auth Server"
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:106
+msgid "API Endpoint URL"
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:110
+msgid "Endpoint URL for API request."
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:116
+msgid "Whitelist active"
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:121
+msgid "Activate the whitelist. Only whitelisted hosts can access the API."
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:127
+msgid "Whitelist"
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:131
+msgid "Whitelisted hosts can access the API. One hostname or ip per line."
+msgstr ""
+
+#: ../inc/RW_Remote_Auth_Server_Options.php:137
+msgid "Save Changes"
+msgstr ""
