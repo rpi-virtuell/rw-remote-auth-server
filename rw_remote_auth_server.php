@@ -83,6 +83,10 @@ class RW_Remote_Auth_Server {
 	 */
 	static public $api_endpoint_default = '/rw_auth';
 
+	static public $cookie_name = 'rw_auth_pw_change';
+
+	static public $plugin_dir_name = '';
+
 	/**
 	 * Plugin constructor.
 	 *
@@ -103,6 +107,8 @@ class RW_Remote_Auth_Server {
 
 		// The Plugins Version
 		self::$plugin_version = $this->get_plugin_header( 'Version' );
+
+		self::$plugin_dir_name = dirname( plugin_basename( __FILE__ ) );
 
 		// Load the textdomain
 		$this->load_plugin_textdomain();
@@ -132,7 +138,8 @@ class RW_Remote_Auth_Server {
 		add_filter( 'site_url', array( 'RW_Remote_Auth_Server_Helper', 'site_url' ) );
 		add_action( 'resetpass_form', array( 'RW_Remote_Auth_Server_Helper', 'resetpass_form') );
 		add_filter( 'login_message',  array( 'RW_Remote_Auth_Server_Helper', 'login_message') );
-
+		add_filter( 'retrieve_password_message', array( 'RW_Remote_Auth_Server_Helper', 'retrieve_password_message') );
+		add_action( 'login_init', array ( 'RW_Remote_Auth_Server_Helper', 'pw_change_js' ) );
 		do_action( 'rw_remote_auth_server_init' );
 	}
 

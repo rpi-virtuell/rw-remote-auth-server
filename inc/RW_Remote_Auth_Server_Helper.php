@@ -154,7 +154,7 @@ class RW_Remote_Auth_Server_Helper {
 			$key = &$keyVal[0];
 			$val = urldecode($keyVal[1]);
 			if ( $key == 'action' && ( $val == 'rp'  ) ) {
-				$url =  add_query_arg( 'redirect_to', urlencode( $_POST[ 'redirect_to'] ), $url );
+				$url =  add_query_arg( 'redirect_to', urlencode( $_POST[ 'redirect_to'] ."/wp-admin"), $url );
 			}
 		}
 		return $url;
@@ -171,11 +171,33 @@ class RW_Remote_Auth_Server_Helper {
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since   0.1.5
+	 */
 	static public function login_message( $message ) {
-		if ( isset( $_REQUEST[ 'reauth' ] )  &&  $_REQUEST[ 'reauth' ] == 1 ) {
+		if ( isset( $_REQUEST[ 'reauth' ] )  &&  $_REQUEST[ 'reauth' ] == 1 && isset( $_COOKIE[ RW_Remote_Auth_Server::$cookie_name ] ) && $_COOKIE[ RW_Remote_Auth_Server::$cookie_name ] == 1 ) {
+			setcookie( RW_Remote_Auth_Server::$cookie_name, null, time()- ( 60 * 60 )  );
 			$message .= '<p class="message">' .  __( 'You will receive a link to create a new password via email.', RW_Remote_Auth_Server::$textdomain ) . "</p>";
 		}
 		return $message;
 	}
 
+	/**
+	 *
+	 *
+	 * @since   0.1.5
+	 */
+	static public function retrieve_password_message( $message ) {
+		setcookie( RW_Remote_Auth_Server::$cookie_name, 1, time()+ ( 24 * 60 * 60 )  );
+		return $message;
+	}
+
+	static public function pw_change_js() {
+		if ( isset( $_POST['redirect_to'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'resetpass' ) {
+			wp_enqueue_script( 'jQuery','https://login.reliwerk.de/wp-includes/js/jquery/jquery.js?ver=1.11.2' );
+			wp_enqueue_script( 'rw_auth_pw_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/pw_change.js' ), array( 'jQuery') );
+		}
+	}
 }
