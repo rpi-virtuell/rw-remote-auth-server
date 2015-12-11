@@ -50,6 +50,9 @@ Answer
 
 == Changelog ==
 
+= 0.1.6 =
+* remove home_url filter for WordPress 4.4 compability, use js instead
+
 = 0.1.5 =
 * added message on login screen at reauth=1
 

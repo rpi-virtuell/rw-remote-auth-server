@@ -5,14 +5,14 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:
 * Author:           Frank Staude
-* Version:          0.1.5
+* Version:          0.1.6
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
 * Domain Path:      /languages
  * GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
  * GitHub Branch:     master
- * Last Change:       04.08.2015 16:45
+ * Last Change:       11.12.2015 14:16
 */
 
 class RW_Remote_Auth_Server {
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version = "0.1.3";
+	static public $version = "0.1.6";
 
 	/**
 	 * Singleton object holder
@@ -132,10 +132,10 @@ class RW_Remote_Auth_Server {
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_ping' ) );
 
 		add_filter( 'register_url', array( 'RW_Remote_Auth_Server_Helper', 'register_url' ) );
-		add_filter( 'home_url', array( 'RW_Remote_Auth_Server_Helper', 'home_url' ) );
 		add_filter( 'lostpassword_url', array( 'RW_Remote_Auth_Server_Helper', 'lostpassword_url' ) );
 		add_filter( 'login_url', array( 'RW_Remote_Auth_Server_Helper', 'login_url' ) );
 		add_filter( 'site_url', array( 'RW_Remote_Auth_Server_Helper', 'site_url' ) );
+
 		add_action( 'resetpass_form', array( 'RW_Remote_Auth_Server_Helper', 'resetpass_form') );
 		add_filter( 'login_message',  array( 'RW_Remote_Auth_Server_Helper', 'login_message') );
 		add_filter( 'retrieve_password_message', array( 'RW_Remote_Auth_Server_Helper', 'retrieve_password_message') );

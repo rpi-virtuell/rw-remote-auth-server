@@ -40,56 +40,6 @@ class RW_Remote_Auth_Server_Helper {
 		return $url;
 	}
 
-	/**
-	 *
-	 * @since   0.1.4
-	 * @param   $url
-	 *
-	 * @return  string
-	 */
-	static public function home_url( $url ) {
-
-		if ( isset( $_REQUEST[ 'redirect_to' ] ) ) {
-			if ( isset( $_GET[ 'redirect_to' ] ) ) {
-				$parseurl = parse_url( $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
-				$pairs = explode( '&', $parseurl ['query'] );
-				foreach ( $pairs as $pair ) {
-					$keyVal = explode( '=', $pair );
-					$key    = &$keyVal[0];
-					$val    = urldecode( $keyVal[1] );
-					if ( $key == 'redirect_to' ) {
-						$parseurl2 = parse_url( $val );
-						$pairs2    = explode( '&', $parseurl2 ['query'] );
-						foreach ( $pairs2 as $pair2 ) {
-							$keyVal2 = explode( '=', $pair2 );
-							$key2    = &$keyVal2[0];
-							$val2    = urldecode( $keyVal2[1] );
-							if ( $key2 == 'service' ) {
-								$target = parse_url( $val2 );
-								$url    = $target['scheme'] . '://' . $target['host'];
-							}
-						}
-					}
-				}
-			}
-			if ( isset( $_POST[ 'redirect_to' ] ) ) {
-				$parseurl = parse_url( urldecode( $_POST[ 'redirect_to' ] ) );
-				$pairs = explode( '&', $parseurl ['query'] );
-				foreach ( $pairs as $pair ) {
-					$keyVal = explode( '=', $pair );
-					$key    = &$keyVal[0];
-					$val    = urldecode( $keyVal[1] );
-					if ( $key == 'service' ) {
-						$target = parse_url( $val );
-						if ( !isset(  $_POST[ 'log' ] ) ) {
-							$url    = $target['scheme'] . '://' . $target['host'];
-						}
-					}
-				}
-			}
-		}
-		return $url;
-	}
 
 	/**
 	 *
@@ -148,13 +98,15 @@ class RW_Remote_Auth_Server_Helper {
 	 */
 	static public function site_url( $url ) {
 		$parseurl = parse_url( $url );
-		$pairs = explode('&', $parseurl [ 'query'] );
-		foreach ($pairs as $pair) {
-			$keyVal = explode('=',$pair);
-			$key = &$keyVal[0];
-			$val = urldecode($keyVal[1]);
-			if ( $key == 'action' && ( $val == 'rp'  ) ) {
-				$url =  add_query_arg( 'redirect_to', urlencode( $_POST[ 'redirect_to'] ."/wp-admin"), $url );
+		if ( isset( $parseurl [ 'query'] ) ) {
+			$pairs = explode('&', $parseurl ['query']);
+			foreach ($pairs as $pair) {
+				$keyVal = explode('=', $pair);
+				$key = &$keyVal[0];
+				$val = urldecode($keyVal[1]);
+				if ($key == 'action' && ($val == 'rp')) {
+					$url = add_query_arg('redirect_to', urlencode($_POST['redirect_to'] . "/wp-admin"), $url);
+				}
 			}
 		}
 		return $url;
@@ -198,6 +150,10 @@ class RW_Remote_Auth_Server_Helper {
 		if ( isset( $_POST['redirect_to'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'resetpass' ) {
 			wp_enqueue_script( 'jQuery','https://login.reliwerk.de/wp-includes/js/jquery/jquery.js?ver=1.11.2' );
 			wp_enqueue_script( 'rw_auth_pw_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/pw_change.js' ), array( 'jQuery') );
+		}
+		if ( isset( $_REQUEST['redirect_to'] ) ) {
+			wp_enqueue_script( 'jQuery','https://login.reliwerk.de/wp-includes/js/jquery/jquery.js?ver=1.11.2' );
+			wp_enqueue_script( 'rw_auth_backlink_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/backlink_change.js' ), array( 'jQuery') );
 		}
 	}
 }
