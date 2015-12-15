@@ -3,7 +3,7 @@ Contributors: f.staude
 Tags:
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 0.1.5
+Stable tag: 0.1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,9 @@ Answer
 
 
 == Changelog ==
+
+= 0.1.7 =
+* change backlink js
 
 = 0.1.6 =
 * remove home_url filter for WordPress 4.4 compability, use js instead
