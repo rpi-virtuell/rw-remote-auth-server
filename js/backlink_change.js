@@ -2,6 +2,7 @@
 
 
 jQuery(document).ready(function(){
+    var Cookies2 = Cookies.noConflict();
     var query = window.location.search.substring(1);
     var vars = query.split("&");
     for (var i=0;i<vars.length;i++) {
@@ -17,9 +18,10 @@ jQuery(document).ready(function(){
                     var parser2 = document.createElement('a');
                     parser2.href = decodeURIComponent( pair2[1] );
                     jQuery("#backtoblog a").attr("href", parser2.protocol + "//" + parser2.hostname );
+                    Cookies2.set('loginserver_backlink', parser2.protocol + "//" + parser2.hostname, { expires: 7 });
                 }
             }
         }
     }
+    jQuery("#backtoblog a").attr("href", Cookies2.get('loginserver_backlink' ) );
 })
-

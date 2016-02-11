@@ -146,14 +146,20 @@ class RW_Remote_Auth_Server_Helper {
 		return $message;
 	}
 
+	/**
+	 *
+	 * @since   0.1.5
+	 */
 	static public function pw_change_js() {
 		if ( isset( $_POST['redirect_to'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'resetpass' ) {
 			wp_enqueue_script( 'jQuery','https://login.reliwerk.de/wp-includes/js/jquery/jquery.js?ver=1.11.2' );
+
 			wp_enqueue_script( 'rw_auth_pw_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/pw_change.js' ), array( 'jQuery') );
 		}
 		if ( isset( $_REQUEST['redirect_to'] ) ) {
 			wp_enqueue_script( 'jQuery','https://login.reliwerk.de/wp-includes/js/jquery/jquery.js?ver=1.11.2' );
-			wp_enqueue_script( 'rw_auth_backlink_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/backlink_change.js' ), array( 'jQuery') );
+			wp_enqueue_script( 'cookie_js', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/js.cookie.js' ), array( 'jQuery') );
+			wp_enqueue_script( 'rw_auth_backlink_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/backlink_change.js' ), array( 'jQuery', 'cookie_js') );
 		}
 	}
 }
