@@ -102,6 +102,9 @@ class RW_Remote_Auth_Server_Helper {
 			$pairs = explode('&', $parseurl ['query']);
 			foreach ($pairs as $pair) {
 				$keyVal = explode('=', $pair);
+				if(!isset($keyVal[1])){
+					$keyVal[1]='';
+				}
 				$key = &$keyVal[0];
 				$val = urldecode($keyVal[1]);
 				if ($key == 'action' && ($val == 'rp')) {

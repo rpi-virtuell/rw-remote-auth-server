@@ -5,7 +5,7 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:
 * Author:           Frank Staude
-* Version:          0.1.9
+* Version:          0.2.0
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
@@ -69,6 +69,14 @@ class RW_Remote_Auth_Server {
 	 */
 	static public $plugin_filename = __FILE__;
 
+
+	/**
+	 * @var     string
+	 * @since   0.9
+	 * @access  public
+	 */
+	static public $plugin_dir;
+
 	/**
 	 * @var     string
 	 * @since   0.1
@@ -110,6 +118,11 @@ class RW_Remote_Auth_Server {
 
 		self::$plugin_dir_name = dirname( plugin_basename( __FILE__ ) );
 
+		self::$plugin_dir_name = dirname( plugin_basename( __FILE__ ) );
+
+		// absolute path to plugins root
+		self::$plugin_dir = plugin_dir_path(__FILE__);
+
 		// Load the textdomain
 		$this->load_plugin_textdomain();
 
@@ -118,6 +131,7 @@ class RW_Remote_Auth_Server {
 		add_action( 'admin_init',       array( 'RW_Remote_Auth_Server_Options', 'register_settings' ) );
 		add_action( 'admin_menu',       array( 'RW_Remote_Auth_Server_Options', 'options_menu' ) );
 		add_action( 'init',             array( 'RW_Remote_Auth_Server_API', 'add_endpoint'), 0 );
+		add_action( 'init',             array( 'RW_Remote_Auth_Server_Clients', 'init'), 0 );
 		add_action( 'parse_request',    array( 'RW_Remote_Auth_Server_API', 'parse_request'), 0 );
 		add_action( 'rw_auth_check_server', array( 'RW_Remote_Auth_Server_Installation', 'check_server') );
 
@@ -130,6 +144,7 @@ class RW_Remote_Auth_Server {
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_password_change' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_password' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_ping' ) );
+		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_details' ) );
 
 		add_filter( 'register_url', array( 'RW_Remote_Auth_Server_Helper', 'register_url' ) );
 		add_filter( 'lostpassword_url', array( 'RW_Remote_Auth_Server_Helper', 'lostpassword_url' ) );

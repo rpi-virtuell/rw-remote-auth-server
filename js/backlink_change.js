@@ -18,10 +18,16 @@ jQuery(document).ready(function(){
                     var parser2 = document.createElement('a');
                     parser2.href = decodeURIComponent( pair2[1] );
                     jQuery("#backtoblog a").attr("href", parser2.protocol + "//" + parser2.hostname );
+                    jQuery("#backtoblog a").html('← Zurück zu ' + parser2.hostname);
                     Cookies2.set('loginserver_backlink', parser2.protocol + "//" + parser2.hostname, { expires: 7 });
                 }
             }
         }
     }
-    jQuery("#backtoblog a").attr("href", Cookies2.get('loginserver_backlink' ) );
+    jQuery("#backtoblog a").attr("href", Cookies2.get('loginserver_backlink' ));
+    //jQuery(".login h1 a").css('background-image','url(http://alpika2016.de/wp-content/uploads/2015/08/rpi-logo-150x150.png)');
+    jQuery(".login h1 a").css({
+        'background-image':'none'
+        ,'display':'inline'
+    }).html('Zentrale Autorisierung');
 })

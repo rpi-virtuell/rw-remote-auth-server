@@ -1,9 +1,9 @@
 === RW Remote Auth Server ===
-Contributors: f.staude
-Tags:
+Contributors: f.staude, j.happel
+Tags: singleSignOn, cloud blogging
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 0.1.9
+Stable tag: 0.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,12 @@ Answer
 
 
 == Changelog ==
+= 0.2.0
+ * add whitelisting
+ * add api-key management
+ * add new methods
+ * add debug logging
+ * minor fixes
 
 = 0.1.9 =
 * fix backlink after password change on last screen

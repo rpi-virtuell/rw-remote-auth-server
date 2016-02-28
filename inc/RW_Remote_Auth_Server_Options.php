@@ -117,7 +117,7 @@ class RW_Remote_Auth_Server_Options {
 						</th>
 						<td>
 							<label for="rw_remote_auth_server_options_whitelist_active">
-							<input id="rw_remote_auth_server_options_whitelist_active" type="checkbox" value="1" <?php if ( get_option( 'rw_remote_auth_server_options_endpoint_url' == 1 ) ) echo " checked "; ?>   name="rw_remote_auth_server_options_whitelist_active">
+							<input id="rw_remote_auth_server_options_whitelist_active" type="checkbox" value="1" <?php if ( get_option( 'rw_remote_auth_server_options_whitelist_active' ) == 1 ) echo " checked "; ?>   name="rw_remote_auth_server_options_whitelist_active">
 							<?php _e( 'Activate the whitelist. Only whitelisted hosts can access the API.', RW_Remote_Auth_Server::$textdomain); ?></label>
 						</td>
 					</tr>

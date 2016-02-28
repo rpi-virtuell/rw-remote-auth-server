@@ -43,6 +43,9 @@ class RW_Remote_Auth_Server_Installation {
 			);
 		}
 
+		if(is_multisite()){
+
+		}
 		// schedule check
 		wp_schedule_event( time(), 'twicedaily' , 'rw_auth_check_server' );
 
@@ -68,6 +71,12 @@ class RW_Remote_Auth_Server_Installation {
 	    wp_unschedule_event( $timestamp, 'rw_auth_check_server' );
 
         flush_rewrite_rules();
+
+		//remove custom post type
+		register_deactivation_hook(
+			RW_Remote_Auth_Server::$plugin_filename,
+			array('RW_Remote_Auth_Server_Clients', 'unregister_post_type')
+		);
     }
 
 	/**
