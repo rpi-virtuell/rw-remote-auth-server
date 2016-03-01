@@ -5,7 +5,7 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:
 * Author:           Frank Staude
-* Version:          0.2.0
+* Version:          0.2.1
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
@@ -23,7 +23,23 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version = "0.1.9";
+	static public $version 		= '0.2.1';
+	/**
+	 * Supported Client
+	 *
+	 * @var     string
+	 * @since   0.2
+	 * @access  public
+	 */
+	public static $client 		= 'RW_Remote_Auth_Client';
+	/**
+	 * Minimal required client version
+	 *
+	 * @var     string
+	 * @since   0.2
+	 * @access  public
+	 */
+	public static $client_version = '0.2.0'; //clients must have a version higher then this
 
 	/**
 	 * Singleton object holder
@@ -138,6 +154,7 @@ class RW_Remote_Auth_Server {
 		add_filter( 'plugin_action_links_' . self::$plugin_base_name, array( 'RW_Remote_Auth_Server_Options', 'plugin_settings_link') );
 		add_filter( 'query_vars',       array( 'RW_Remote_Auth_Server_API', 'add_query_vars'), 0 );
 
+        add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_say_hello' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_exists' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_auth' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_create' ) );

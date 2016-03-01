@@ -9,9 +9,6 @@
 
 class RW_Remote_Auth_Server_API {
 
-	public static $min_client_version = '0.2.0';
-	public static $client_class = 'RW_Remote_Auth_Client';
-
 	/**
      * Add API Endpoint
 	 *
@@ -59,7 +56,7 @@ class RW_Remote_Auth_Server_API {
 	}
 
 	static public function log($content){
-		if ( WP_DEBUG ) {
+		if ( WP_DEBUG  ) {
 			file_put_contents( RW_Remote_Auth_Server::$plugin_dir.'/clients.log' , $content ."\n",FILE_APPEND );
 		}
 	}
@@ -67,8 +64,8 @@ class RW_Remote_Auth_Server_API {
 
 	static public function is_validate_trustet_client($whitelisted = false){
 
-		$trusted_client =  $error = false;
-		$error_msg = 'Error: ';
+		$error = $set_key = $error_data= false;
+		$error_msg = __('Error').': ';
 
 		date_default_timezone_set('Europe/Berlin');
 
@@ -80,7 +77,7 @@ class RW_Remote_Auth_Server_API {
 		$user_agent = explode(';',$_SERVER['HTTP_USER_AGENT']);
 		if(count($user_agent) < 4){
 			self::log( 'invalid user agent .'.$_SERVER['HTTP_USER_AGENT'] );
-			$error_msg .= 'Invalid user agent. '.$_SERVER['HTTP_USER_AGENT'];
+			$error_msg .= __('Invalid user agent.',RW_Remote_Auth_Server::get_textdomain()) .' '. $_SERVER['HTTP_USER_AGENT'];
 			$error = true;
 		}else{
 			list($version,$host,$ip,$apikey)= $user_agent;
@@ -88,13 +85,15 @@ class RW_Remote_Auth_Server_API {
 			$client_arr = explode(' ',$version);
 			if( count($client_arr) < 2){
 				log ( ' invalid arguments in client version ' );
-				$error_msg .= 'Invalid arguments in client version ';
+				$error_msg .= __('Invalid arguments in client version ',RW_Remote_Auth_Server::get_textdomain());
 				$error = true;
 			}else{
 				list($client_class,$release) = $client_arr;
-				if(!version_compare($release,self::$min_client_version,'<=')){
+				if(!version_compare($release,RW_Remote_Auth_Server::$client_version,'<=')){
 					self::log ( 'too old client version ' . $release);
-					$error_msg .= 'You use a deprecated client version. Please update your RW Remote Auth Client plugin. ' . $release;
+					$error_msg .= __('You use a deprecated client',RW_Remote_Auth_Server::get_textdomain()).
+									' (version '.$release.')  '. __('Please update your RW Remote Auth Client plugin. ',RW_Remote_Auth_Server::get_textdomain()) .
+									RW_Remote_Auth_Server::$client_version;
 					$error = true;
 				}
 			}
@@ -105,10 +104,18 @@ class RW_Remote_Auth_Server_API {
 
 
 
-
-		if( !$error && $ip  == $_SERVER['REMOTE_ADDR'] && self::$client_class = $client_class ){
+		//if whitelisting is active we will check  IP and API-Key
+		if	(
+				!$error 																&&  //check deeper
+				get_site_option('rw_remote_auth_server_options_whitelist_active') 		&&  //whitelisting active
+				$ip  == $_SERVER['REMOTE_ADDR'] 										&&  //real IP correct
+				RW_Remote_Auth_Server::$client = $client_class								//Client corret
+			)
+		{
 
 			global $wpdb;
+
+			self::log('check  IP and API-Key');
 
 			$whitelist = get_option( 'rw_remote_auth_server_options_whitelist');
 			$whitelist = str_replace(' ','' ,$whitelist);
@@ -130,25 +137,74 @@ class RW_Remote_Auth_Server_API {
 
 				//validate the clients api_key
 				$host =  $wpdb->_real_escape($host);
-				$dbkey = $wpdb->get_var("select post_excerpt from $wpdb->posts where post_title = '".$host."' and post_type='rw_authclientkey'");
+				$dbkey = $wpdb->get_var("select post_password from $wpdb->posts where post_title = '".$host."' and post_excerpt='active' and post_type='rw_authclientkey'");
 
 				if(!empty($dbkey) && $dbkey == $apikey){
 					self::log('trusted client '.$dbkey);
 					return true;
 				}else{
 					self::log('invalid apikey');
-					$error_msg .= 'Invalid Api Key. Go to setting page of your RW Remote Auth Client and update it with a valid Api Key!';
 					$error = true;
+					$set_key = true;
 				}
 
 			}else{
 				$error = true;
-				$error_msg .= 'Your host ist not allowed so connect to this CAS - Server';
+				$error_msg .= __('Your host ist not allowed to connect to this Auth - Server', RW_Remote_Auth_Server::get_textdomain());
+
+				$set_key = true;
 			}
 		}else{
-			$error_msg .= '';
+			$error_msg = '';
 		}
-		return new WP_Error( 'rw_auth_server_error',$error_msg );
+
+		//automaticly send a new api key to the client an replace the new one with the existing,
+		//this will deactivate the current client for security reason
+		if($set_key){
+
+			$existing = get_page_by_title( $host, OBJECT, 'rw_authclientkey' );
+
+			if($existing && $existing->post_excerpt != 'active'){
+				$admin = get_userdata( 1 );
+				if($admin){
+					$admin_email = $admin->user_email;
+				}else{
+					$admin_email = 'unknown';
+				}
+				//clienst need to be activatet bei the remote_auth_server admin
+				$error_msg .= __('Client is suspended by remote service.', RW_Remote_Auth_Server::get_textdomain()).' '.
+					__('Please ask for (re)activation').': '.$admin_email.'';
+
+			}else{
+
+				$hash = wp_generate_password( 20, true, true );
+
+				$api_key_entry = array(
+					'post_title'    => $host,
+					'post_content'  => $ip,
+					'post_password'	=> $hash,
+					'post_excerpt'	=> 'suspended',
+					'post_content'	=> $ip,
+					'post_author'   => 1,
+					'post_type'		=> 'rw_authclientkey'
+				);
+				if($existing){
+					$api_key_entry['ID'] = $existing->ID;
+				}
+				// Insert new api-key into the database
+				if(!wp_insert_post( $api_key_entry )){
+					$error_msg .= "Database Error";
+				}
+
+
+				$error_msg .= __('Invalid API Key! Your Client is suspended. The Admin of the Auth Service may enable your client again.', RW_Remote_Auth_Server::get_textdomain());
+				$error_data = array('rw_remote_auth_api_key'=>$hash);
+			}
+
+
+		}
+
+		return new WP_Error( 'rw_auth_server_error',$error_msg ,$error_data);
 
 	}
 
@@ -179,14 +235,34 @@ class RW_Remote_Auth_Server_API {
      * @param $msg
      * @param string $data
      */
-	static protected function send_response($msg, $data = ''){
+	static protected function send_response($msg, $data = '',$errors = false){
 		$response[ 'message' ] = $msg;
 		if( $data ) {
 			$response['data'] = $data;
         }
+        $response['errors'] = $errors;
+        $valid = self::is_validate_trustet_client();
+        if(is_wp_error($valid)){
+
+            self::log('validation error message: '.$valid->get_error_message() );
+
+			if ($valid->get_error_data()) {
+				$response[ 'errors' ]['data'] = $valid->get_error_data();
+				$response[ 'errors' ]['message']=$valid->get_error_message();
+
+			}else{
+				$response[ 'errors' ] = $valid->get_error_message();
+			}
+
+            $response[ 'message' ] = false;
+            $response[ 'data' ] = false;
+
+        }
+
 		header('content-type: application/json; charset=utf-8');
 		echo json_encode( $response )."\n";
-		exit;
+        self::log('send_response:'.json_encode( $response )."\n---------------------------------------------------------------");
+        exit;
 	}
 
     /**
@@ -252,7 +328,34 @@ class RW_Remote_Auth_Server_API {
         }
         return $request;
     }
-	
+
+	/**
+	 * Check and validate Connection
+	 *
+	 * @hook    rw_remote_auth_server_cmd_parser
+	 * @param   $request
+	 * @return  mixed
+	 */
+	static public function cmd_say_hello( $request ) {
+		if ( 'say_hello' == $request->cmd ) {
+
+            $data = array(
+				'notice'=> 'success',
+                'answer' => __('Connection established. Everything works fine. ', RW_Remote_Auth_Server::get_textdomain())
+			);
+            self::log('say_hello');
+
+
+            RW_Remote_Auth_Server_API::send_response(
+                $request->cmd ,
+                $data,
+                false
+            );
+
+		}
+        return $request;
+	}
+
     /**
      *
      * @hook    rw_remote_auth_server_cmd_parser
@@ -298,26 +401,16 @@ class RW_Remote_Auth_Server_API {
     }
 
 	/**
+     * @hook    rw_remote_auth_server_cmd_parser
 	 * @param $request
 	 */
 	static public function cmd_user_password_change( $request ) {
 		global $wpdb;
 
-		//@todo uncomment this in next release
-		/*
-		$valid = self::is_validate_trustet_client();
-		if(is_wp_error($valid)){
-			$error_string = $valid->get_error_message();
-			RW_Remote_Auth_Server_API::send_response(false);
-			return $request;
-
-		}
-		*/
-
 		if ( 'user_change_password' == $request->cmd ) {
 			// Check userdate and create the new user
-			$user = get_user_by( 'slug', $request->data->user_name );
-			if ( $user->user_pass == urldecode( $request->data->user_old_password ) ) {
+            $user = get_user_by( 'slug', $request->data->user_name );
+            if ( $user->user_pass == urldecode( $request->data->user_old_password ) ) {
 				$wpdb->update (
 					$wpdb->users,
 					array(
@@ -331,7 +424,9 @@ class RW_Remote_Auth_Server_API {
 			} else {
 				RW_Remote_Auth_Server_API::send_response( false );
 			}
-		}
+            self::log('user_change_password:'. json_encode( $request ) );
+
+        }
 		return $request;
 	}
 
@@ -342,21 +437,12 @@ class RW_Remote_Auth_Server_API {
 	 */
 	static public function cmd_user_get_password( $request ) {
 
-		//@todo uncomment this in next release
-		/*
-		$valid = self::is_validate_trustet_client();
-		if(is_wp_error($valid)){
-			$error_string = $valid->get_error_message();
-			RW_Remote_Auth_Server_API::send_response(false);
-			return $request;
-
-		}
-		*/
 		if ( 'user_get_password' == $request->cmd ) {
 			// Check userdate and create the new user
-			$user = get_user_by( 'slug', $request->data->user_name );
+			$user = get_user_by( 'login', $request->data->user_name );
 			if ( $user !== false ) {
-				RW_Remote_Auth_Server_API::send_response( json_encode( array( 'password' => $user->user_pass, 'email' => $user->user_email ) ) );
+				RW_Remote_Auth_Server_API::send_response($user->user_pass,
+                    json_encode( array( 'password' => $user->user_pass, 'email' => $user->user_email ) ) );
 			} else {
 				RW_Remote_Auth_Server_API::send_response( false );
 			}

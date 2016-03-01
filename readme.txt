@@ -49,6 +49,13 @@ Answer
 
 
 == Changelog ==
+= 0.2.1
+* add connection check
+* add automatic api-key generator
+* add autosuspending invalid clients
+* add client listing
+* minor fixes
+
 = 0.2.0
  * add whitelisting
  * add api-key management

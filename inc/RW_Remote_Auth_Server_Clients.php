@@ -42,7 +42,7 @@ class RW_Remote_Auth_Server_Clients
     }
 
     /**
-     * Create custom Post Type to stor API Keys
+     * Create custom Post Type to store Cients and API Keys
      */
      static public function create_apikey_cpt(){
         $args = array(
@@ -50,14 +50,9 @@ class RW_Remote_Auth_Server_Clients
                 'name' => __('Server Clients'),
                 'singular_name' => __('Server Client')
             ),
-            'public' => true, /* shows in admin on left menu etc */
+            'public' => false, /* shows in admin on left menu etc */
             'has_archive' => false,
-            'exclude_from_search' => true,
-            'publicly_queryable' => true,
-            'menu_position' => 76,
-            'supports' => array( 'title','excerpt' ),
 
-            //'rewrite' => array('slug' => 'rw_authclientkey'), /* rewrite not usefull in this case */
         );
 
         register_post_type( self::$post_type, $args);
@@ -81,6 +76,108 @@ class RW_Remote_Auth_Server_Clients
             $slug = (!$slug ) ? 'edit.php?post_type=' . $post_type : $slug;
             remove_menu_page($slug);
         }
+
+    }
+
+
+
+    protected static function toggle_host_link($id,$current_status){
+
+        ?> <a href="<?php print wp_nonce_url(admin_url('options-general.php?page=rw-remote-auth-server/inc/RW_Remote_Auth_Server_Options.php&id='.$id.'&status='.$current_status), 'toggle_host', 'rw-remote-auth-server_clients_nonce');?>"
+             class="button button-primary"><?php echo ($current_status == 'active')?  __('Disable'):__('Enable');  ?></a> <?php
+    }
+    protected static function toggle_host($id,$current_status){
+
+        if( !is_nan($id) < 1 && is_string($current_status) ){
+            wp_die(
+                var_dump($_GET)
+            );
+        }{
+            $status = ($current_status == 'suspended')? 'active':'suspended';
+            $args = array(
+                'ID'=>$id,
+                'post_excerpt'=>$status,
+            );
+            wp_update_post($args);
+        }
+
+
+
+
+    }
+    static public function display_clients(){
+        if (isset($_GET['rw-remote-auth-server_clients_nonce']) && wp_verify_nonce($_GET['rw-remote-auth-server_clients_nonce'], 'toggle_host')){
+            self::toggle_host($_GET['id'],$_GET['status'] );
+        }
+        ?>
+        <hr style="margin-top:30px">
+        <h1>Clients</h1>
+        <style>
+            table.rw_remote_auth_server{
+                margin-left: 218px;
+            }
+            .rw_remote_auth_server th{
+                border:0;
+                background-color: gray;
+            }
+            .rw_remote_auth_server td{
+                border-right:1px solid #666666;
+                border-bottom:1px solid #666666;
+            }
+            .rw_remote_auth_server .client {
+                font-size: 1.5em;
+                line-height: 1.6em;
+                min-width:380px;
+            }
+            .rw_remote_auth_server .status {
+                width:50px;
+            }
+            .rw_remote_auth_server .action {
+                width:150px;
+            }
+            .rw_remote_auth_server .active {
+                background-color: lightgreen;
+            }
+            .rw_remote_auth_server .suspended {
+                color: red;
+            }
+        </style>
+        <table class="rw_remote_auth_server" cellpadding="4" cellspacing="0" >
+            <tr>
+                <th>
+                    Domain
+                </th>
+                <th colspan="2">
+                    Status
+                </th>
+            </tr>
+            <?php
+
+            $args = array(
+                'post_type'=>'rw_authclientkey',
+                'orderby' => 'IP',
+                'post_status' => 'any'
+            );
+            $myposts = get_posts( $args );
+
+            foreach ( $myposts as $post ) :
+                ?>
+                <tr class="<?php echo $post->post_excerpt; ?>">
+                    <td class="client">
+                        <?php echo $post->post_title; ?>
+                    </td>
+                    <td class="status">
+                        <?php echo $post->post_excerpt; ?>
+                    </td>
+                    <td class="action">
+                        <?php echo RW_Remote_Auth_Server_Clients::toggle_host_link($post->ID, $post->post_excerpt ); ?>
+                    </td>
+                </tr>
+            <?php endforeach;
+            ?>
+        </table>
+        <hr style="margin-bottom:30px">
+        <?php
 
     }
 

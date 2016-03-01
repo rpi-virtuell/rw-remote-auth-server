@@ -99,7 +99,13 @@ class RW_Remote_Auth_Server_Options {
 			<form method="POST" action="options.php"><fieldset class="widefat">
 				<?php
 				settings_fields( 'rw_remote_auth_server_options' );
+				//List all clients
+				RW_Remote_Auth_Server_Clients::display_clients();
+
 				?>
+				<h2>
+					<?php echo __('Settings');?>
+				</h2>
 				<table class="form-table">
 					<tr>
 						<th scope="row">
@@ -127,7 +133,7 @@ class RW_Remote_Auth_Server_Options {
 							<label for="rw_remote_auth_server_options_whitelist"><?php _e( 'Whitelist', RW_Remote_Auth_Server::$textdomain ); ?></label>
 						</th>
 						<td>
-							<textarea rows="10" aria-describedby="whitelist-description" id="rw_remote_auth_server_options_whitelist" name="rw_remote_auth_server_options_whitelist" class="large-text code"><?php echo get_option( 'rw_remote_auth_server_options_whitelist'); ?></textarea>
+							<textarea rows="3" cols="15" aria-describedby="whitelist-description" id="rw_remote_auth_server_options_whitelist" name="rw_remote_auth_server_options_whitelist" class="large-text code"><?php echo get_option( 'rw_remote_auth_server_options_whitelist'); ?></textarea>
 							<p id="whitelist-description" class="description"><?php _e( 'Whitelisted hosts can access the API. One hostname or ip per line.', RW_Remote_Auth_Server::$textdomain); ?></p>
 						</td>
 					</tr>
@@ -137,6 +143,7 @@ class RW_Remote_Auth_Server_Options {
 				<input type="submit" class="button-primary" value="<?php _e('Save Changes' )?>" />
 			</form>
 		</div>
-	<?php
+		<?php
+
 	}
 }
