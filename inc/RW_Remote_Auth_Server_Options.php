@@ -36,7 +36,7 @@ class RW_Remote_Auth_Server_Options {
 	 * @return  array
 	 */
 	static public function plugin_settings_link( $links ) {
-		$settings_link = '<a href="options-general.php?page=' . RW_Remote_Auth_Server::$plugin_base_name . '">' . __( 'Settings' )  . '</a>';
+		$settings_link = '<a href="'.admin_url('options-general.php?page=' . RW_Remote_Auth_Server::$plugin_dir_name . '/inc/'.basename(__FILE__)).'">' . __( 'Settings' )  . '</a>';
 		array_unshift($links, $settings_link);
 		return $links;
 	}
