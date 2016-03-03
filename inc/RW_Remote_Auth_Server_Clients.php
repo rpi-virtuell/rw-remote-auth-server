@@ -16,7 +16,7 @@ class RW_Remote_Auth_Server_Clients
 
     public static $post_type = 'rw_authclientkey';
     public static $post_type_slug = false;
-        /**
+    /**
      *
      * @useaction init
      */
@@ -29,22 +29,22 @@ class RW_Remote_Auth_Server_Clients
     }
 
     /**
-    * get clients domain
-    */
+     * get clients domain
+     */
     static public function detect_server_client(){
 
         $str = $_SERVER['HTTP_USER_AGENT'];
         $str .= "|";
         $str .= $_SERVER['REMOTE_ADDR'];
         $str .= "\n";
-            file_put_contents( RW_Remote_Auth_Server::$plugin_dir.'/clients.log', $str,FILE_APPEND );
+        file_put_contents( RW_Remote_Auth_Server::$plugin_dir.'/clients.log', $str,FILE_APPEND );
         //die();
     }
 
     /**
      * Create custom Post Type to store Cients and API Keys
      */
-     static public function create_apikey_cpt(){
+    static public function create_apikey_cpt(){
         $args = array(
             'labels' => array(
                 'name' => __('Server Clients'),
@@ -84,14 +84,12 @@ class RW_Remote_Auth_Server_Clients
     protected static function toggle_host_link($id,$current_status){
 
         ?> <a href="<?php print wp_nonce_url(admin_url('options-general.php?page=rw-remote-auth-server/inc/RW_Remote_Auth_Server_Options.php&id='.$id.'&status='.$current_status), 'toggle_host', 'rw-remote-auth-server_clients_nonce');?>"
-             class="button button-primary"><?php echo ($current_status == 'active')?  __('Disable'):__('Enable');  ?></a> <?php
+              class="button button-primary"><?php echo ($current_status == 'active')?  __('Disable'):__('Enable');  ?></a> <?php
     }
     protected static function toggle_host($id,$current_status){
 
         if( !is_nan($id) < 1 && is_string($current_status) ){
-            wp_die(
-                var_dump($_GET)
-            );
+            //error
         }{
             $status = ($current_status == 'suspended')? 'active':'suspended';
             $args = array(
@@ -118,34 +116,44 @@ class RW_Remote_Auth_Server_Clients
             }
             .rw_remote_auth_server th{
                 border:0;
-                background-color: gray;
+                background-color: lightgrey;
+                border-right:1px solid #666666;
+                border-bottom:1px solid #666666;
+                font-weight: bolder;
             }
             .rw_remote_auth_server td{
                 border-right:1px solid #666666;
                 border-bottom:1px solid #666666;
             }
             .rw_remote_auth_server .client {
-                font-size: 1.5em;
-                line-height: 1.6em;
+                font-size: 1.3em;
+                line-height: 1.3em;
                 min-width:380px;
             }
             .rw_remote_auth_server .status {
                 width:50px;
             }
+            .rw_remote_auth_server .ip {
+                width:50px;
+            }
             .rw_remote_auth_server .action {
                 width:150px;
             }
-            .rw_remote_auth_server .active {
+            .rw_remote_auth_server .active .status{
                 background-color: lightgreen;
             }
-            .rw_remote_auth_server .suspended {
-                color: red;
+            .rw_remote_auth_server .suspended .status{
+                background-color: red;
+                color:white;
             }
         </style>
         <table class="rw_remote_auth_server" cellpadding="4" cellspacing="0" >
             <tr>
                 <th>
                     Domain
+                </th>
+                <th>
+                    IP
                 </th>
                 <th colspan="2">
                     Status
@@ -156,7 +164,8 @@ class RW_Remote_Auth_Server_Clients
             $args = array(
                 'post_type'=>'rw_authclientkey',
                 'orderby' => 'IP',
-                'post_status' => 'any'
+                'post_status' => 'any',
+                'posts_per_page'=> -1
             );
             $myposts = get_posts( $args );
 
@@ -165,6 +174,9 @@ class RW_Remote_Auth_Server_Clients
                 <tr class="<?php echo $post->post_excerpt; ?>">
                     <td class="client">
                         <?php echo $post->post_title; ?>
+                    </td>
+                    <td class="ip">
+                        <?php echo $post->post_content; ?>
                     </td>
                     <td class="status">
                         <?php echo $post->post_excerpt; ?>
