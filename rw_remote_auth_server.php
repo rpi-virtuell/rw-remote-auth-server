@@ -3,16 +3,16 @@
 /**
 * Plugin Name:      RW Remote Auth Server
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
-* Description:
+* Description:	    The Auth Server extends the possibilities of a SAS Server and offers a json api with a set of helpfull methods to get and set data from the CAS Service
 * Author:           Frank Staude
-* Version:          0.2.1
+* Version:          0.2.2
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
 * Domain Path:      /languages
- * GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
- * GitHub Branch:     master
- * Last Change:       11.02.2016 17:52
+* GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
+* GitHub Branch:     master
+* Last Change:       11.02.2016 17:52
 */
 
 class RW_Remote_Auth_Server {
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version 		= '0.2.1';
+	static public $version 		= '0.2.2';
 	/**
 	 * Supported Client
 	 *
