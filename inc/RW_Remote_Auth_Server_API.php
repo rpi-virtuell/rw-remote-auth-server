@@ -184,7 +184,8 @@ class RW_Remote_Auth_Server_API {
 					'post_excerpt'	=> 'suspended',
 					'post_content'	=> $ip,
 					'post_author'   => 1,
-					'post_type'		=> 'rw_authclientkey'
+					'post_type'		=> 'rw_authclientkey',
+					'posts_per_page'=> -1
 				);
 				if($existing){
 					$api_key_entry['ID'] = $existing->ID;
