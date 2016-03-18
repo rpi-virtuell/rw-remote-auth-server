@@ -165,4 +165,53 @@ class RW_Remote_Auth_Server_Helper {
 			wp_enqueue_script( 'rw_auth_backlink_change', plugins_url( RW_Remote_Auth_Server::$plugin_dir_name . '/js/backlink_change.js' ), array( 'jQuery', 'cookie_js') );
 		}
 	}
+
+	/**
+	 *
+	 * @since   0.2.3
+	 */
+	static public function log_login( $login, $user) {
+		$host = "local";
+		if ( isset( $_POST['redirect_to'] ) ) {
+			$host = $_POST['redirect_to'];
+		}
+		// write login and host to usermeta
+		update_user_meta( $user->ID, 'rw_auth_server_lastlogin', time() );
+		update_user_meta( $user->ID, 'rw_auth_server_host', $host );
+		openlog("rpi-login", LOG_NDELAY, LOG_LOCAL2);
+		syslog(LOG_ERR, $login. ";" . $host );
+		closelog();
+
+	}
+
+	/**
+	 *
+	 * @since   0.2.3
+	 */
+	static public function manage_users_columns( $column_headers) {
+		$column_headers['lastlogin'] = __( 'Last Login', RW_Remote_Auth_Server::$textdomain) ;
+		$column_headers['host'] = __( 'Host', RW_Remote_Auth_Server::$textdomain) ;
+		return $column_headers;
+	}
+
+	/**
+	 *
+	 * @since   0.2.3
+	 */
+	static public function manage_users_columns_data($value, $column_name, $user_id) {
+		if ($column_name == 'lastlogin' ) {
+			$return = '';
+			$meta = get_user_meta( $user_id, 'rw_auth_server_lastlogin', true );
+			if ( $meta != '') {
+				$return = date ( "d.m.Y H:i:s" , $meta);
+			}
+			return  $return;
+		}
+		if ($column_name == 'host' ) {
+			return get_user_meta( $user_id, 'rw_auth_server_host', true );
+		}
+		return $value;
+
+	}
+
 }

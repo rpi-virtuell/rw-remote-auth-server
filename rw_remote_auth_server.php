@@ -5,7 +5,7 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:	    The Auth Server extends the possibilities of a CAS Server and offers a json api with a set of helpfull methods to get and set data from the CAS Service
 * Author:           Frank Staude
-* Version:          0.2.2
+* Version:          0.2.3
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version 		= '0.2.2';
+	static public $version 		= '0.2.3';
 	/**
 	 * Supported Client
 	 *
@@ -39,7 +39,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.2
 	 * @access  public
 	 */
-	public static $client_version = '0.2.0'; //clients must have a version higher then this
+	public static $client_version = '0.2.3'; //clients must have a version higher then this
 
 	/**
 	 * Singleton object holder
@@ -172,7 +172,12 @@ class RW_Remote_Auth_Server {
 		add_filter( 'login_message',  array( 'RW_Remote_Auth_Server_Helper', 'login_message') );
 		add_filter( 'retrieve_password_message', array( 'RW_Remote_Auth_Server_Helper', 'retrieve_password_message') );
 		add_action( 'login_init', array ( 'RW_Remote_Auth_Server_Helper', 'pw_change_js' ) );
+		add_action( 'wp_login', array( 'RW_Remote_Auth_Server_Helper', 'log_login'),10,2 );
+		add_filter( 'manage_users_columns', array( 'RW_Remote_Auth_Server_Helper', 'manage_users_columns') );
+		add_action( 'manage_users_custom_column', array( 'RW_Remote_Auth_Server_Helper', 'manage_users_columns_data'),10, 3 );
+
 		do_action( 'rw_remote_auth_server_init' );
+
 	}
 
 	/**
