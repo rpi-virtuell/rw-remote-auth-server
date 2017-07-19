@@ -2,8 +2,8 @@
 Contributors: f.staude, j.happel
 Tags: singleSignOn, cloud blogging
 Requires at least: 4.0
-Tested up to: 4.4.2
-Stable tag: 0.2.4
+Tested up to: 4.8
+Stable tag: 0.2.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,9 @@ Answer
 
 
 == Changelog ==
+
+= 0.2.5 =
+* added user list cmd
 
 = 0.2.4 =
 * typo client version

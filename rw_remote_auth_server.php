@@ -4,15 +4,15 @@
 * Plugin Name:      RW Remote Auth Server
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:	    The Auth Server extends the possibilities of a CAS Server and offers a json api with a set of helpfull methods to get and set data from the CAS Service
-* Author:           Frank Staude
-* Version:          0.2.4
+* Author:           Frank Neumann-Staude
+* Version:          0.2.5
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
 * Domain Path:      /languages
 * GitHub Plugin URI: https://github.com/rpi-virtuell/rw-remote-auth-server
 * GitHub Branch:     master
-* Last Change:       01.04.2016 15:46
+* Last Change:       19.07.2017 13:36
 */
 
 class RW_Remote_Auth_Server {
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version 		= '0.2.4';
+	static public $version 		= '0.2.5';
 	/**
 	 * Supported Client
 	 *
@@ -162,6 +162,7 @@ class RW_Remote_Auth_Server {
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_password' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_ping' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_details' ) );
+		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_get_list' ) );
 
 		add_filter( 'register_url', array( 'RW_Remote_Auth_Server_Helper', 'register_url' ) );
 		add_filter( 'lostpassword_url', array( 'RW_Remote_Auth_Server_Helper', 'lostpassword_url' ) );
