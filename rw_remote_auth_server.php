@@ -5,7 +5,7 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:	    The Auth Server extends the possibilities of a CAS Server and offers a json api with a set of helpfull methods to get and set data from the CAS Service
 * Author:           Frank Neumann-Staude
-* Version:          0.2.5
+* Version:          0.2.6
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version 		= '0.2.5';
+	static public $version 		= '0.2.6';
 	/**
 	 * Supported Client
 	 *
@@ -156,6 +156,7 @@ class RW_Remote_Auth_Server {
 
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_say_hello' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_exists' ) );
+        add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_email_exists' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_auth' ) );
         add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_create' ) );
 		add_filter( 'rw_remote_auth_server_cmd_parser', array( 'RW_Remote_Auth_Server_API', 'cmd_user_password_change' ) );

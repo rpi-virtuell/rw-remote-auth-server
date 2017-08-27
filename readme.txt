@@ -1,9 +1,9 @@
 === RW Remote Auth Server ===
-Contributors: f.staude, j.happel
+Contributors: f.staude, johappel
 Tags: singleSignOn, cloud blogging
 Requires at least: 4.0
-Tested up to: 4.8
-Stable tag: 0.2.5
+Tested up to: 4.8.2
+Stable tag: 0.2.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,11 @@ Answer
 
 
 == Changelog ==
+
+= 0.2.6 =
+* added email exists cmd
+* fix user registered date
+* fix user role
 
 = 0.2.5 =
 * added user list cmd

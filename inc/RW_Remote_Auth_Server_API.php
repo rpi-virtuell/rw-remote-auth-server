@@ -288,8 +288,27 @@ class RW_Remote_Auth_Server_API {
 	 */
 	static public function cmd_user_exists( $request ) {
 		if ( 'user_exists' == $request->cmd ) {
-			$answer = username_exists( $request->data->user_name ) ? true : false;
-			RW_Remote_Auth_Server_API::send_response( $answer );
+
+			$bool = username_exists( $request->data->user_name ) ? true : false;
+
+			RW_Remote_Auth_Server_API::send_response( $bool );
+		}
+		return $request;
+	}
+
+	/**
+	 * @since 0.2.6
+	 *
+	 * @hook    rw_remote_auth_server_cmd_parser
+	 * @param   $request
+	 * @return  mixed
+	 */
+	static public function cmd_email_exists( $request ) {
+		if ( 'email_exists' == $request->cmd ) {
+
+			$bool = email_exists( $request->data->user_email ) ? true : false;
+
+			RW_Remote_Auth_Server_API::send_response( $bool );
 		}
 		return $request;
 	}
@@ -406,6 +425,7 @@ class RW_Remote_Auth_Server_API {
 		global $wpdb;
 
 		if ( 'user_create' == $request->cmd ) {
+
 			// only if user not exists.
 			if ( ! get_user_by( 'login' ,$request->data->user_name ) ) {
 				// Check userdate and create the new user
@@ -413,11 +433,21 @@ class RW_Remote_Auth_Server_API {
 					'user_login'    => $request->data->user_name,
 					'user_pass'     => urldecode( $request->data->user_password ),
 					'user_nicename' => $request->data->user_name,
+					'display_name' =>  str_replace('.',' ', str_replace('_',' ',str_replace('-',' ', $request->data->user_name))),
 					'user_email'    => $request->data->user_email,
-
+					'user_registered' => gmdate( 'Y-m-d H:i:s' )
 				);
 
+
+
 				$wpdb->insert( $wpdb->users, $data );
+
+				$user_id = $wpdb->get_var($wpdb->prepare('Select ID from '.$wpdb->users.' WHERE user_login = %s', $request->data->user_name));
+
+				$User = get_user_by('ID', $user_id);
+
+				$User->set_role('subscriber');
+
 				RW_Remote_Auth_Server_API::send_response( true );
 			}
 		}
