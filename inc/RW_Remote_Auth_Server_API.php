@@ -532,12 +532,23 @@ class RW_Remote_Auth_Server_API {
 				'search_columns' => array( 'user_login', 'user_nicename', 'user_email' ),
 			) );
 
-			foreach ( $users as $user ) {
-				$return[] = array(
-					/* translators: 1: user_login, 2: user_email */
-					'label' => sprintf( _x( '%1$s (%2$s)', 'user autocomplete result' ), $user->user_login, $user->user_email ),
-					'value' => $user->user_login,
-				);
+			//for more privacy: show email only on complete accordance
+			if(count($users) < 2  ||  strpos($request->data->term, '@')>0){
+				foreach ( $users as $user ) {
+					$return[] = array(
+						/* translators: 1: user_login, 2: user_email */
+						'label' => sprintf( _x( '%1$s (%2$s)', 'user autocomplete result' ), $user->user_login, $user->user_email ),
+						'value' => $user->user_login,
+					);
+				}
+			}else{
+				foreach ( $users as $user ) {
+					$return[] = array(
+						/* translators: 1: user_login, 2: user_email */
+						'label' => sprintf( _x( '%1$s', 'user autocomplete result' ), $user->user_login ),
+						'value' => $user->user_login,
+					);
+				}
 			}
 			RW_Remote_Auth_Server_API::send_response( json_encode( $return ) );
 

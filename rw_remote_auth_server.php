@@ -5,7 +5,7 @@
 * Plugin URI:       https://github.com/rpi-virtuell/rw_remote_auth_server
 * Description:	    The Auth Server extends the possibilities of a CAS Server and offers a json api with a set of helpfull methods to get and set data from the CAS Service
 * Author:           Frank Neumann-Staude
-* Version:          0.2.6
+* Version:          0.2.7
 * Licence:          GPLv3
 * Author URI:       http://staude.net
 * Text Domain:      rw_remote_auth_server
@@ -23,7 +23,7 @@ class RW_Remote_Auth_Server {
 	 * @since   0.1
 	 * @access  public
 	 */
-	static public $version 		= '0.2.6';
+	static public $version 		= '0.2.7';
 	/**
 	 * Supported Client
 	 *

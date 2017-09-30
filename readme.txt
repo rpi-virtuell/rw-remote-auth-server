@@ -49,6 +49,8 @@ Answer
 
 
 == Changelog ==
+= 0.2.7 =
+* fix privacy
 
 = 0.2.6 =
 * added email exists cmd
