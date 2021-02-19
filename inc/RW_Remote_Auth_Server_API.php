@@ -84,7 +84,7 @@ class RW_Remote_Auth_Server_API {
 
 			$client_arr = explode(' ',$version);
 			if( count($client_arr) < 2){
-				log ( ' invalid arguments in client version ' );
+				self::log ( ' invalid arguments in client version ' );
 				$error_msg .= __('Invalid arguments in client version ',RW_Remote_Auth_Server::get_textdomain());
 				$error = true;
 			}else{
@@ -129,17 +129,23 @@ class RW_Remote_Auth_Server_API {
 			//is client from a trusted host or ip ?
 			if(in_array($ip ,$whitelist_arr ) || in_array($host ,$whitelist_arr ) ){
 
-				self::log('trusted host '.$host);
+				self::log('requesting host '.$host);
 				if($whitelisted === true){
 
 					return true;
 				}
 
 				//validate the clients api_key
-				$host =  $wpdb->_real_escape($host);
-				$dbkey = $wpdb->get_var("select post_password from $wpdb->posts where post_title = '".$host."' and post_excerpt='active' and post_type='rw_authclientkey'");
+				self::log('trusted host '.$host);
 
-				if(!empty($dbkey) && $dbkey == $apikey){
+				$client = get_page_by_title( $host, OBJECT, 'rw_authclientkey' );
+				$dbkey = $client->post_password;
+				//$host =  $wpdb->_real_escape($host);
+				//$dbkey = $wpdb->get_var("select post_password from $wpdb->posts where post_title = '".$host."' and post_excerpt='active' and post_type='rw_authclientkey'");
+
+				self::log('validate the clients api_key. dbkey: '.$dbkey.' apikey: '.$apikey);
+
+				if(!empty($dbkey) && ($dbkey == $apikey  || $dbkey == base64_decode($apikey) ) ){
 					self::log('trusted client '.$dbkey);
 					return true;
 				}else{
