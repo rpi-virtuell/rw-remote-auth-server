@@ -31,7 +31,10 @@ class RW_Remote_Auth_Server_Helper {
 						$val2 = urldecode($keyVal2[1]);
 						if ( $key2 == 'service' ) {
 							$target = parse_url ($val2);
-							$url = $target['scheme'] . '://' . $target['host'] . '/register';
+							//$url = $target['scheme'] . '://' . $target['host'] . '/register';
+							$url = $url.'?ref_service='.$target['scheme'] . '://' . $target['host'] . '/register';
+							
+							
 						}
 					}
 				}
